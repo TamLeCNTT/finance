@@ -167,6 +167,7 @@ const ThuChiEdit = (props) => {
                       className="form-select"
                       onChange={(e) => changestate(e)}
                       value={state}
+                         disabled={true}
                     >
                       <option value="" hidden>
                         Chọn trạng thái
