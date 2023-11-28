@@ -3,11 +3,11 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import ThuchiService from "../../service/ThuchiService";
-const ThuChiAdd = (props) => {
+const ThuChiEdit = (props) => {
   const [name, setname] = useState();
-  const [soxe, setsoxe] = useState();
+  const [listPaid, setListPaid] = useState([]);
 
-  const [load, setLoad] = useState(false);
+  const [paid, setPaid] = useState({});
   const [show, setshow] = useState(false);
   const [soluong, setsoluong] = useState(0);
   const [content, setcontent] = useState("");
@@ -31,43 +31,40 @@ const ThuChiAdd = (props) => {
     else {
       if (!soluong) toast.error("Vui lòng nhập số lượng");
       else if (!content) toast.error("Vui lòng nhập nội dung");
-      else if (!state) toast.error("Vui lòng chọn trạng thái");
       else {
-        let paid = {
-          id: makeid(10),
+        let paids = {
+          id: props.id,
           content: content,
           date: date,
           quantity: soluong,
           status: Number(state) + 1,
         };
-        console.log(paid);
-        ThuchiService.getAll().then((res) => {
-          let listpaid = res.data
-            ? res.data.filter((item) => item !== null)[state]
-              ? res.data.filter((item) => item !== null)[state].data
-              : []
-            : [];
-
-          listpaid.push(paid);
-          console.log(listpaid);
-          ThuchiService.update({
-            name: Number(state) + 1,
-            data: listpaid,
-          }).then((ress) => {
-            toast.success("Thêm thành công");
-            props.savedata();
-          });
+        let listpadNew = listPaid;
+        let index = listpadNew.findIndex((item) => item.id == props.id);
+        listpadNew[index] = paids;
+        console.log(index, listpadNew[index], paid, paids, listpadNew);
+        ThuchiService.update({
+          name: Number(state) + 1,
+          data: listpadNew,
+        }).then((ress) => {
+          toast.success("Cập nhật thành công");
+          props.savedata();
+          setshow(false);
         });
       }
     }
   };
   const openModal = () => {
-    setcontent("");
-    setdate("");
-    setsoluong("");
-    setstate("");
-
-    setLoad(true);
+    console.log(props.id, props.status);
+    ThuchiService.getbyid(props.status).then((res) => {
+      setPaid(res.data.data.filter((item) => item.id == props.id)[0]);
+      let paids = res.data.data.filter((item) => item.id == props.id)[0];
+      setListPaid(res.data.data);
+      setcontent(paids.content);
+      setdate(paids.date);
+      setsoluong(paids.quantity);
+      setstate(paids.status - 1);
+    });
     setshow(true);
   };
   const changedate = (e) => {
@@ -92,7 +89,7 @@ const ThuChiAdd = (props) => {
         aria-label="edit"
         onClick={() => openModal()}
       >
-        <button className="btn btn-lg btn-primary">Thêm</button>
+        <input type="button" className="btn btn-primary " value={"edit"} />
       </a>
 
       <Modal
@@ -189,7 +186,7 @@ const ThuChiAdd = (props) => {
                     className="btn btn-primary mt-4 w-100 btn-lg p-4"
                     onClick={(e) => save(e)}
                   >
-                    Thêm
+                    Save
                   </button>
                 </div>
               </div>
@@ -201,4 +198,4 @@ const ThuChiAdd = (props) => {
   );
 };
 
-export default ThuChiAdd;
+export default ThuChiEdit;

@@ -18,10 +18,10 @@ function App() {
         <header className="App-header">
           <Routes>
             {/* Router of Student */}
-            <Route path="/student/list" element={<StudentList />} />
-            <Route path="/thuchi/list" element={<ThuChiList />} />
+        
+            <Route path="/" element={<ThuChiList />} />
             {/* <Route path="/signup" element={<Signup />} /> */}
-            <Route path="/" element={<Tests />} />
+           
           </Routes>
           <ToastContainer
             position="top-right"

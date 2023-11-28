@@ -8,6 +8,10 @@ class ThuchiService {
     const url = `${SCHEMA}.json`;
     return axiosClient.get(url);
   }
+  getbyid(id) {
+    const url = `/${SCHEMA}/${id}.json`;
+    return axiosClient.get(url);
+  }
   update(data) {
     const url = `/${SCHEMA}/${data.name}.json`;
     return axiosClient.patch(url, data);
