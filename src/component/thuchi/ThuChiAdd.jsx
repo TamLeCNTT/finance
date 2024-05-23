@@ -78,7 +78,7 @@ const ThuChiAdd = (props) => {
     setcontent(e.target.value);
   };
   const changesoluong = (e) => {
-    setsoluong(e.target.value);
+        if (Number(e.target.value))     setsoluong(e.target.value);
   };
   const changestate = (e) => {
     setstate(e.target.value);
